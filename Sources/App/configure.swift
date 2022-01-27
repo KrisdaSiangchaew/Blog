@@ -24,9 +24,9 @@ public func configure(_ app: Application) throws {
     // uncomment to serve files from /Public folder
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
     
-    app.routes.get("hello") { req -> Response in
-        req.templates.renderHtml(MyTemplate(title: "Hello, World!"))
-    }
+//    app.routes.get("hello") { req -> Response in
+//        req.templates.renderHtml(MyTemplate(title: "Hello, World!"))
+//    }
     
 //    app.routes.get("hello") { req -> Response in
 //        let doc = Document(.html) {

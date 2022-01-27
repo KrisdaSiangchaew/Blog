@@ -7,6 +7,6 @@ func routes(_ app: Application) throws {
     }
     
     app.routes.get { req -> Response in
-        req.templates.renderHtml(WebIndexTemplate(.init(title: "Home", message: "Welcome to my page!")))
+        req.templates.renderHtml(WebHomeTemplate(.init(title: "Krisda Home", message: "Welcome to My Homepage")))
     }
 }

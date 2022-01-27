@@ -30,9 +30,11 @@ extension Svg {
 
 public struct WebIndexTemplate: TemplateRepresentable {
     public var context: WebIndexContext
+    var body: Tag
     
-    public init(_ context: WebIndexContext) {
+    public init(_ context: WebIndexContext, @TagBuilder _ builder: () -> Tag) {
         self.context = context
+        self.body = builder()
     }
     
     @TagBuilder
@@ -93,7 +95,7 @@ public struct WebIndexTemplate: TemplateRepresentable {
                 }
                 
                 Main {
-                    // To be done
+                    body
                 }
                 
                 Footer {

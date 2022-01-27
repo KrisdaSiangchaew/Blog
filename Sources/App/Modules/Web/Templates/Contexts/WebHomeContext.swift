@@ -8,11 +8,9 @@
 import Foundation
 
 struct WebHomeContext {
+    let icon: String
     let title: String
     let message: String
-    
-    init(title: String, message: String) {
-        self.title = title
-        self.message = message
-    }
+    let paragraphs: [String]
+    let link: WebLinkContext
 }

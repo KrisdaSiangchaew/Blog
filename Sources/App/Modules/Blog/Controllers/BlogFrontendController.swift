@@ -19,4 +19,13 @@ struct BlogFrontendController {
                      content: "Lorem ipsum dolor sit amet.")
         }.sorted { $0.date > $1.date }
     }()
+    
+    func blogView(req: Request) throws -> Response {
+        let ctx = BlogPostsContext(
+            icon: "💋",
+            title: "Blog",
+            message: "Hot news and stories about everything",
+            posts: posts)
+        return req.templates.renderHtml(BlogPostsTemplate(ctx))
+    }
 }

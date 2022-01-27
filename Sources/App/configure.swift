@@ -24,9 +24,15 @@ public func configure(_ app: Application) throws {
     // uncomment to serve files from /Public folder
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
     
-    // setup web routes
-    let router = WebRouter()
-    try router.boot(routes: app.routes)
+    // setup module routes
+    let routers: [RouteCollection] = [
+        BlogRouter(),
+        WebRouter()
+    ]
+    
+    for router in routers {
+        try router.boot(routes: app.routes)
+    }
     
     let dbPath = app.directory.resourcesDirectory + "db.sqlite"
     app.databases.use(.sqlite(.file(dbPath)), as: .sqlite)

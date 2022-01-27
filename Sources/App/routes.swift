@@ -1,14 +1,12 @@
-import Fluent
 import Vapor
+import SwiftHtml
 
 func routes(_ app: Application) throws {
     app.get { req in
         return "It works!"
     }
-
-    app.get("hello") { req -> String in
-        return "Hello, world!"
+    
+    app.routes.get { req -> Response in
+        req.templates.renderHtml(WebIndexTemplate(.init(title: "Home", message: "Welcome to my page!")))
     }
-
-    try app.register(collection: TodoController())
 }

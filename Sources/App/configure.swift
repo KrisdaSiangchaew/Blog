@@ -24,26 +24,9 @@ public func configure(_ app: Application) throws {
     // uncomment to serve files from /Public folder
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
     
-//    app.routes.get("hello") { req -> Response in
-//        req.templates.renderHtml(MyTemplate(title: "Hello, World!"))
-//    }
-    
-//    app.routes.get("hello") { req -> Response in
-//        let doc = Document(.html) {
-//            Html {
-//                Head {
-//                    Title("Hello, World!")
-//                }
-//                Body {
-//                    H1("Hello, World!")
-//                }
-//            }
-//        }
-//
-//        let body = DocumentRenderer(minify: false, indent: 4).render(doc)
-//
-//        return Response(status: .ok, headers: ["content-type": "text/html"], body: .init(string: body))
-//    }
+    // setup web routes
+    let router = WebRouter()
+    try router.boot(routes: app.routes)
     
     let dbPath = app.directory.resourcesDirectory + "db.sqlite"
     app.databases.use(.sqlite(.file(dbPath)), as: .sqlite)

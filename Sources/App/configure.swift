@@ -11,13 +11,13 @@ public func configure(_ app: Application) throws {
     // extends path to always contain a trailing hash
     app.middleware.use(ExtendPathMiddleWare())
     
-    // setup module routes
-    let routers: [RouteCollection] = [
-        BlogRouter(),
-        WebRouter()
+    // setup module
+    let modules: [ModuleInterface] = [
+        WebModule(),
+        BlogModule()
     ]
-    for router in routers {
-        try router.boot(routes: app.routes)
+    for module in modules {
+        try module.boot(app)
     }
     
     // setup Fluent with SQLite database under the Resources directory

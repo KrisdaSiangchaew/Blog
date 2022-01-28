@@ -10,7 +10,11 @@ import Fluent
 import SwiftHtml
 import Foundation
 
-final class BlogCategoryModel: Model {
+final class BlogCategoryModel: DatabaseModelInterface {
+    typealias Module = BlogModule
+    
+    static let identifier: String = "categories"
+    
     static let schema: String = "blog_categories"
     
     struct FieldKeys {

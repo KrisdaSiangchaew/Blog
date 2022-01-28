@@ -7,6 +7,8 @@
 
 import Vapor
 import Fluent
+import SwiftHtml
+import Foundation
 
 final class BlogCategoryModel: Model {
     static let schema: String = "blog_categories"
@@ -22,7 +24,7 @@ final class BlogCategoryModel: Model {
     @Children(for: \.$category) var posts: [BlogPostModel]
     
     init() { }
-    
+
     init(id: UUID? = nil, title: String) {
         self.id = id
         self.title = title

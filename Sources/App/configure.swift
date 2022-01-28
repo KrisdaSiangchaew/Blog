@@ -1,8 +1,8 @@
 import Vapor
 import SwiftHtml
+import SwiftSgml
 import Fluent
 import FluentSQLiteDriver
-import SwiftSgml
 
 public func configure(_ app: Application) throws {
     // serve files from /Public folder
@@ -20,6 +20,7 @@ public func configure(_ app: Application) throws {
         try router.boot(routes: app.routes)
     }
     
+    // setup Fluent with SQLite database under the Resources directory
     let dbPath = app.directory.resourcesDirectory + "db.sqlite"
     app.databases.use(.sqlite(.file(dbPath)), as: .sqlite)
 

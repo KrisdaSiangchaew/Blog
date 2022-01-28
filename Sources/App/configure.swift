@@ -4,32 +4,18 @@ import Fluent
 import FluentSQLiteDriver
 import SwiftSgml
 
-struct MyTemplate: TemplateRepresentable {
-    let title: String
-    
-    func render(_ req: Request) -> Tag {
-        Html {
-            Head {
-                Title(title)
-            }
-            Body {
-                H1(title)
-            }
-        }
-    }
-}
-
-// configures your application
 public func configure(_ app: Application) throws {
-    // uncomment to serve files from /Public folder
+    // serve files from /Public folder
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+    
+    // extends path to always contain a trailing hash
+    app.middleware.use(ExtendPathMiddleWare())
     
     // setup module routes
     let routers: [RouteCollection] = [
         BlogRouter(),
         WebRouter()
     ]
-    
     for router in routers {
         try router.boot(routes: app.routes)
     }

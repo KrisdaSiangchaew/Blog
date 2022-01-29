@@ -8,25 +8,6 @@
 import Fluent
 
 enum BlogMigrations {
-    struct seed: AsyncMigration {
-        func prepare(on db: Database) async throws {
-            let categories = (1...4).map { index in
-                BlogCategoryModel(title: "Sample category #\(index)")
-            }
-            try await categories.create(on: db)
-            
-            try await (1...9).map { index in
-                BlogPostModel(id: nil, title: "Sample post #\(index)", slug: "sample-post-\(index)", imageKey: "/img/posts/\(String(format: "%02d", index + 1)).jpg", excerpt: "Lorem ipsum", date: Date().addingTimeInterval(-Double.random(in: 0...(86400 * 60))), content: "Lorem ipsum dolor sit amet.", categoryID: categories[Int.random(in: 0..<categories.count)].id!)
-            }
-            .create(on: db)
-        }
-        
-        func revert(on db: Database) async throws {
-            try await BlogPostModel.query(on: db).delete()
-            try await BlogCategoryModel.query(on: db).delete()
-        }
-    }
-    
     struct v1: AsyncMigration {
         func prepare(on db: Database) async throws {
             try await db.schema(BlogCategoryModel.schema)
@@ -43,7 +24,10 @@ enum BlogMigrations {
                 .field(BlogPostModel.FieldKeys.v1.date, .date, .required)
                 .field(BlogPostModel.FieldKeys.v1.content, .string, .required)
                 .field(BlogPostModel.FieldKeys.v1.categoryID, .uuid, .required)
-                .foreignKey(BlogPostModel.FieldKeys.v1.categoryID, references: BlogPostModel.schema, .id, onDelete: DatabaseSchema.ForeignKeyAction.setNull, onUpdate: .cascade)
+                .foreignKey(BlogPostModel.FieldKeys.v1.categoryID,
+                            references: BlogCategoryModel.schema, .id,
+                            onDelete: DatabaseSchema.ForeignKeyAction.setNull,
+                            onUpdate: .cascade)
                 .unique(on: BlogPostModel.FieldKeys.v1.slug)
                 .create()
         }
@@ -51,6 +35,32 @@ enum BlogMigrations {
         func revert(on db: Database) async throws {
             try await db.schema(BlogCategoryModel.schema).delete()
             try await db.schema(BlogPostModel.schema).delete()
+        }
+    }
+    
+    struct seed: AsyncMigration {
+        func prepare(on db: Database) async throws {
+            let categories = (1...4).map { index in
+                BlogCategoryModel(title: "Sample category #\(index)")
+            }
+            try await categories.create(on: db)
+            
+            let posts = (1...9).map { index in
+                BlogPostModel(
+                    id: nil,
+                    title: "Sample post #\(index)",
+                    slug: "sample-post-\(index)",
+                    imageKey: "/img/posts/\(String(format: "%02d", index + 1)).jpg",
+                    excerpt: "Lorem ipsum", date: Date().addingTimeInterval(-Double.random(in: 0...(86400 * 60))),
+                    content: "Lorem ipsum dolor sit amet.",
+                    categoryID: categories[Int.random(in: 0 ..< categories.count)].id!)
+            }
+            try await posts.create(on: db)
+        }
+        
+        func revert(on db: Database) async throws {
+            try await BlogPostModel.query(on: db).delete()
+            try await BlogCategoryModel.query(on: db).delete()
         }
     }
 }
